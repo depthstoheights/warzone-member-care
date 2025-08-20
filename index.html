@@ -1,0 +1,2407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>War Zone Member Care - Depths to Heights</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Unique Side Navigation */
+        .side-nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, #16213e 0%, #0f3460 100%);
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .side-nav.hidden {
+            transform: translateX(-260px);
+        }
+
+        .logo-section {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
+        .logo-section h1 {
+            font-size: 1.3em;
+            color: #4fbdba;
+            margin-bottom: 5px;
+        }
+
+        .logo-section p {
+            font-size: 0.8em;
+            color: #7ec8e3;
+        }
+
+        .nav-section {
+            margin-bottom: 25px;
+        }
+
+        .nav-section h3 {
+            color: #4fbdba;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #eee;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .nav-btn:hover {
+            background: rgba(79, 189, 186, 0.2);
+            border-color: #4fbdba;
+            transform: translateX(5px);
+        }
+
+        .nav-btn.active {
+            background: #4fbdba;
+            color: #0f3460;
+            font-weight: bold;
+        }
+
+        .nav-btn .icon {
+            margin-right: 8px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.full-width {
+            margin-left: 0;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 200;
+            background: #4fbdba;
+            color: #0f3460;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeSlide 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Unique Card Designs */
+        .hero-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .hero-card h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-card p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Grid Cards */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .resource-tile {
+            background: #0f3460;
+            border: 2px solid #4fbdba;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-tile::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4fbdba, #7ec8e3);
+        }
+
+        .resource-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(79, 189, 186, 0.3);
+        }
+
+        .resource-tile h3 {
+            color: #4fbdba;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .resource-tile p {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .resource-tile a {
+            color: #7ec8e3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .resource-tile a:hover {
+            color: #4fbdba;
+            text-decoration: underline;
+        }
+
+        /* Status Indicators */
+        .status-bar {
+            background: rgba(15, 52, 96, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .status-item .value {
+            font-size: 1.8em;
+            color: #4fbdba;
+            font-weight: bold;
+        }
+
+        .status-item .label {
+            font-size: 0.9em;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .alert::before {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+        }
+
+        .alert.danger {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+        }
+
+        .alert.danger::before {
+            content: '⚠️';
+        }
+
+        .alert.warning {
+            background: rgba(241, 196, 15, 0.2);
+            border: 1px solid #f1c40f;
+        }
+
+        .alert.warning::before {
+            content: '⚡';
+        }
+
+        .alert.info {
+            background: rgba(52, 152, 219, 0.2);
+            border: 1px solid #3498db;
+        }
+
+        .alert.info::before {
+            content: 'ℹ️';
+        }
+
+        /* Accordion Style */
+        .accordion {
+            margin-bottom: 20px;
+        }
+
+        .accordion-item {
+            background: rgba(15, 52, 96, 0.5);
+            margin-bottom: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(79, 189, 186, 0.3);
+        }
+
+        .accordion-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background: rgba(79, 189, 186, 0.1);
+        }
+
+        .accordion-header h3 {
+            color: #4fbdba;
+            margin: 0;
+        }
+
+        .accordion-header .toggle {
+            color: #4fbdba;
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .toggle {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 1000px;
+        }
+
+        .accordion-body {
+            padding: 0 20px 20px;
+        }
+
+        /* Contact Cards */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, rgba(79, 189, 186, 0.1) 0%, rgba(126, 200, 227, 0.1) 100%);
+            border: 1px solid #4fbdba;
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .contact-card h4 {
+            color: #4fbdba;
+            margin-bottom: 10px;
+        }
+
+        .contact-card .badge {
+            display: inline-block;
+            background: #4fbdba;
+            color: #0f3460;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .contact-card p {
+            margin: 8px 0;
+            color: #ccc;
+        }
+
+        .contact-card a {
+            color: #7ec8e3;
+            text-decoration: none;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: #4fbdba;
+            color: #0f3460;
+        }
+
+        .btn-primary:hover {
+            background: #7ec8e3;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #eee;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Checklist */
+        .checklist {
+            background: rgba(15, 52, 96, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            background: rgba(79, 189, 186, 0.1);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 15px;
+            margin-top: 3px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checklist-item label {
+            flex: 1;
+            cursor: pointer;
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        .checklist-item input:checked + label {
+            color: #4fbdba;
+            text-decoration: line-through;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #4fbdba;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4fbdba;
+            border: 3px solid #1a1a2e;
+        }
+
+        .timeline-item h4 {
+            color: #4fbdba;
+            margin-bottom: 10px;
+        }
+
+        .timeline-item p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* Audio Toggle */
+        .audio-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #4fbdba;
+            color: #0f3460;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(79, 189, 186, 0.4);
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+
+        .audio-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .audio-toggle.playing {
+            background: #7ec8e3;
+            animation: audioWave 2s infinite;
+        }
+
+        @keyframes audioWave {
+            0%, 100% { box-shadow: 0 5px 20px rgba(79, 189, 186, 0.4); }
+            50% { box-shadow: 0 5px 30px rgba(126, 200, 227, 0.6); }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 300;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #0f3460;
+            border: 2px solid #4fbdba;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #4fbdba;
+        }
+
+        .modal h2 {
+            color: #4fbdba;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .side-nav {
+                transform: translateX(-260px);
+            }
+            
+            .side-nav.mobile-visible {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-card h1 {
+                font-size: 1.8em;
+            }
+        }
+
+        /* Donate Button */
+        .donate-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .donate-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu Toggle for Mobile -->
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="logo-section">
+            <h1>War Zone Care</h1>
+            <p>Supporting Global Workers</p>
+        </div>
+
+        <div class="nav-section">
+            <h3>Emergency</h3>
+            <button class="nav-btn active" onclick="showSection('dashboard')">
+                <span class="icon">🏠</span> Dashboard
+            </button>
+            <button class="nav-btn" onclick="showSection('immediate')">
+                <span class="icon">🚨</span> Immediate Safety
+            </button>
+            <button class="nav-btn" onclick="showSection('evacuation')">
+                <span class="icon">🚁</span> Evacuation Plans
+            </button>
+        </div>
+
+        <div class="nav-section">
+            <h3>Support</h3>
+            <button class="nav-btn" onclick="showSection('trauma')">
+                <span class="icon">🧠</span> Trauma Care
+            </button>
+            <button class="nav-btn" onclick="showSection('resilience')">
+                <span class="icon">💪</span> Resilience Building
+            </button>
+            <button class="nav-btn" onclick="showSection('spiritual')">
+                <span class="icon">🙏</span> Spiritual Support
+            </button>
+        </div>
+
+        <div class="nav-section">
+            <h3>Resources</h3>
+            <button class="nav-btn" onclick="showSection('communication')">
+                <span class="icon">📡</span> Communication
+            </button>
+            <button class="nav-btn" onclick="showSection('security')">
+                <span class="icon">🔒</span> Security Protocols
+            </button>
+            <button class="nav-btn" onclick="showSection('organizations')">
+                <span class="icon">🏢</span> Organizations
+            </button>
+        </div>
+
+        <div class="nav-section">
+            <h3>Tools</h3>
+            <button class="nav-btn" onclick="showSection('assessment')">
+                <span class="icon">📋</span> Risk Assessment
+            </button>
+            <button class="nav-btn" onclick="showSection('training')">
+                <span class="icon">🎓</span> Training
+            </button>
+            <button class="nav-btn" onclick="showSection('documents')">
+                <span class="icon">📄</span> Documents
+            </button>
+        </div>
+
+        <div class="nav-section">
+            <h3>Help</h3>
+            <button class="nav-btn" onclick="showModal('info')">
+                <span class="icon">ℹ️</span> Info
+            </button>
+            <button class="nav-btn" onclick="showModal('about')">
+                <span class="icon">👤</span> About
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content" id="mainContent">
+        <!-- Dashboard Section -->
+        <section class="content-section active" id="dashboard">
+            <div class="hero-card">
+                <h1>War Zone Member Care</h1>
+                <p>Comprehensive support for global workers in conflict areas</p>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="value">24/7</div>
+                    <div class="label">Crisis Support</div>
+                </div>
+                <div class="status-item">
+                    <div class="value">15+</div>
+                    <div class="label">Partner Orgs</div>
+                </div>
+                <div class="status-item">
+                    <div class="value">50+</div>
+                    <div class="label">Resources</div>
+                </div>
+                <div class="status-item">
+                    <div class="value">Global</div>
+                    <div class="label">Coverage</div>
+                </div>
+            </div>
+
+            <div class="alert danger">
+                <strong>Critical:</strong> If you are in immediate danger, contact your security officer or evacuation coordinator immediately. Use encrypted communication channels only.
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-tile">
+                    <h3>Quick Security Check</h3>
+                    <p>Daily assessment for personal and team safety in conflict zones.</p>
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check1">
+                            <label for="check1">Safe communication established</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check2">
+                            <label for="check2">Emergency contacts updated</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check3">
+                            <label for="check3">Go-bag prepared and accessible</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check4">
+                            <label for="check4">Team check-in completed</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Threat Level Assessment</h3>
+                    <p>Current security situation evaluation</p>
+                    <select style="width: 100%; padding: 10px; margin: 10px 0; background: #0f3460; color: #eee; border: 1px solid #4fbdba; border-radius: 5px;">
+                        <option>Green - Stable</option>
+                        <option>Yellow - Elevated</option>
+                        <option>Orange - High</option>
+                        <option>Red - Critical</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="assessThreat()">Update Status</button>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Emergency Contacts</h3>
+                    <p>Regional crisis response teams available 24/7</p>
+                    <button class="btn btn-danger" onclick="showSection('evacuation')">View Contacts</button>
+                    <button class="btn btn-secondary" onclick="showSection('organizations')">Partner Orgs</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Immediate Safety Section -->
+        <section class="content-section" id="immediate">
+            <div class="hero-card">
+                <h1>Immediate Safety Protocols</h1>
+                <p>Critical actions for active threat situations</p>
+            </div>
+
+            <div class="alert danger">
+                <strong>Life-Threatening Situation Protocol:</strong>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Move to predetermined safe room/shelter</li>
+                    <li>Contact security officer via encrypted channel</li>
+                    <li>Activate team alert system</li>
+                    <li>Follow evacuation protocol if necessary</li>
+                    <li>Document situation when safe</li>
+                </ol>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-item active">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h3>Active Shooter/Armed Attack</h3>
+                        <span class="toggle">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <h4>RUN - HIDE - FIGHT Protocol</h4>
+                            <p><strong>RUN:</strong> If safe evacuation route exists</p>
+                            <ul style="margin-left: 20px; color: #ccc;">
+                                <li>Leave belongings behind</li>
+                                <li>Help others escape if possible</li>
+                                <li>Prevent others from entering danger area</li>
+                                <li>Call security forces when safe</li>
+                            </ul>
+                            
+                            <p><strong>HIDE:</strong> If evacuation not possible</p>
+                            <ul style="margin-left: 20px; color: #ccc;">
+                                <li>Lock/barricade doors</li>
+                                <li>Turn off lights</li>
+                                <li>Silence phones</li>
+                                <li>Hide behind large objects</li>
+                                <li>Remain quiet</li>
+                            </ul>
+                            
+                            <p><strong>FIGHT:</strong> Last resort if life in imminent danger</p>
+                            <ul style="margin-left: 20px; color: #ccc;">
+                                <li>Act aggressively</li>
+                                <li>Improvise weapons</li>
+                                <li>Commit to your actions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h3>Bombing/Explosion</h3>
+                        <span class="toggle">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <h4>During Explosion</h4>
+                            <ul style="color: #ccc;">
+                                <li>Drop to ground immediately</li>
+                                <li>Take cover under sturdy furniture</li>
+                                <li>Cover head and neck with arms</li>
+                                <li>Stay down until shaking stops</li>
+                            </ul>
+                            
+                            <h4>After Explosion</h4>
+                            <ul style="color: #ccc;">
+                                <li>Check for injuries</li>
+                                <li>Exit building if safe (watch for secondary devices)</li>
+                                <li>Avoid windows and glass</li>
+                                <li>Don't use elevators</li>
+                                <li>Account for team members</li>
+                                <li>Move to rally point</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h3>Kidnapping/Abduction</h3>
+                        <span class="toggle">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <h4>Prevention</h4>
+                            <ul style="color: #ccc;">
+                                <li>Vary routes and schedules</li>
+                                <li>Maintain low profile</li>
+                                <li>Avoid predictable patterns</li>
+                                <li>Travel in groups when possible</li>
+                            </ul>
+                            
+                            <h4>If Taken</h4>
+                            <ul style="color: #ccc;">
+                                <li>Stay calm and alert</li>
+                                <li>Comply with demands initially</li>
+                                <li>Observe surroundings for intel</li>
+                                <li>Maintain dignity without antagonizing</li>
+                                <li>Prepare mentally for long-term captivity</li>
+                                <li>Look for escape opportunities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h4>International SOS</h4>
+                    <span class="badge">24/7</span>
+                    <span class="badge">Medical</span>
+                    <span class="badge">Security</span>
+                    <p>Phone: +44 20 8762 8008</p>
+                    <p>Website: <a href="https://www.internationalsos.com" target="_blank">internationalsos.com</a></p>
+                    <p>Global evacuation and crisis response</p>
+                </div>
+
+                <div class="contact-card">
+                    <h4>Global Rescue</h4>
+                    <span class="badge">24/7</span>
+                    <span class="badge">Evacuation</span>
+                    <p>Phone: +1 617-932-6001</p>
+                    <p>Website: <a href="https://www.globalrescue.com" target="_blank">globalrescue.com</a></p>
+                    <p>Field rescue and medical evacuation</p>
+                </div>
+
+                <div class="contact-card">
+                    <h4>Crisis24</h4>
+                    <span class="badge">Security Intel</span>
+                    <p>Phone: +1 312-470-3115</p>
+                    <p>Website: <a href="https://crisis24.garda.com" target="_blank">crisis24.garda.com</a></p>
+                    <p>Real-time security intelligence</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Evacuation Plans Section -->
+        <section class="content-section" id="evacuation">
+            <div class="hero-card">
+                <h1>Evacuation Protocols</h1>
+                <p>Structured withdrawal and emergency evacuation procedures</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Phase 1: Pre-Evacuation Alert</h4>
+                    <p>Security situation deteriorating. Prepare for possible evacuation. Update documents, charge devices, prepare go-bags.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Phase 2: Evacuation Warning</h4>
+                    <p>Evacuation likely within 48 hours. Secure sensitive materials, backup data, notify partners.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Phase 3: Evacuation Order</h4>
+                    <p>Immediate evacuation. Move to assembly point, follow predetermined routes, maintain communication.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Phase 4: Post-Evacuation</h4>
+                    <p>Safe location reached. Debrief, medical checks, contact families, begin recovery process.</p>
+                </div>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-tile">
+                    <h3>Go-Bag Essentials</h3>
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="bag1">
+                            <label for="bag1">Passport & visa copies</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="bag2">
+                            <label for="bag2">Cash (USD & local currency)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="bag3">
+                            <label for="bag3">Medication (2 weeks supply)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="bag4">
+                            <label for="bag4">Water purification tablets</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="bag5">
+                            <label for="bag5">Emergency contact list</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="bag6">
+                            <label for="bag6">Satellite phone/radio</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="bag7">
+                            <label for="bag7">First aid kit</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="bag8">
+                            <label for="bag8">USB with encrypted data</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Evacuation Services</h3>
+                    <p><strong>MedjetAssist</strong></p>
+                    <p>Medical evacuation worldwide</p>
+                    <p>Phone: +1 205-595-6626</p>
+                    <p><a href="https://www.medjetassist.com" target="_blank">www.medjetassist.com</a></p>
+                    <br>
+                    <p><strong>CISI - Cultural Insurance Services</strong></p>
+                    <p>Emergency evacuation insurance</p>
+                    <p>Phone: +1 203-399-5130</p>
+                    <p><a href="https://www.culturalinsurance.com" target="_blank">culturalinsurance.com</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trauma Care Section -->
+        <section class="content-section" id="trauma">
+            <div class="hero-card">
+                <h1>Trauma & Psychological Support</h1>
+                <p>Mental health resources for war zone stress and trauma</p>
+            </div>
+
+            <div class="alert warning">
+                <strong>Normal Reactions to Abnormal Situations:</strong> Experiencing trauma symptoms in war zones is a normal response. Seeking help is a sign of wisdom, not weakness.
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-tile">
+                    <h3>Common Trauma Responses</h3>
+                    <ul style="color: #ccc;">
+                        <li>Hypervigilance and startle response</li>
+                        <li>Sleep disturbances and nightmares</li>
+                        <li>Emotional numbing or detachment</li>
+                        <li>Intrusive memories or flashbacks</li>
+                        <li>Survivor guilt</li>
+                        <li>Difficulty concentrating</li>
+                        <li>Physical symptoms (headaches, fatigue)</li>
+                    </ul>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Immediate Coping Strategies</h3>
+                    <ul style="color: #ccc;">
+                        <li><strong>Grounding:</strong> 5-4-3-2-1 sensory technique</li>
+                        <li><strong>Breathing:</strong> Box breathing (4-4-4-4)</li>
+                        <li><strong>Movement:</strong> Physical exercise daily</li>
+                        <li><strong>Connection:</strong> Regular team check-ins</li>
+                        <li><strong>Routine:</strong> Maintain daily structure</li>
+                        <li><strong>Limits:</strong> Reduce news consumption</li>
+                    </ul>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Professional Support</h3>
+                    <p><strong>Headington Institute</strong></p>
+                    <p>Trauma care for humanitarian workers</p>
+                    <p><a href="https://www.headington-institute.org" target="_blank">headington-institute.org</a></p>
+                    <p>Free online training modules</p>
+                    <br>
+                    <p><strong>Antares Foundation</strong></p>
+                    <p>Managing stress in humanitarian workers</p>
+                    <p><a href="https://www.antaresfoundation.org" target="_blank">antaresfoundation.org</a></p>
+                </div>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h4>KonTerra Group</h4>
+                    <span class="badge">24/7 Helpline</span>
+                    <span class="badge">Trauma Specialists</span>
+                    <p>Website: <a href="https://konterragroup.net" target="_blank">konterragroup.net</a></p>
+                    <p>Critical incident response</p>
+                    <p>Staff care programs</p>
+                </div>
+
+                <div class="contact-card">
+                    <h4>The Center for Victims of Torture</h4>
+                    <span class="badge">Specialized Care</span>
+                    <p>Phone: +1 612-436-4800</p>
+                    <p>Website: <a href="https://www.cvt.org" target="_blank">cvt.org</a></p>
+                    <p>Secondary trauma support</p>
+                </div>
+
+                <div class="contact-card">
+                    <h4>Trauma Recovery Network</h4>
+                    <span class="badge">Online Support</span>
+                    <p>Website: <a href="https://www.traumarecoverynetwork.org" target="_blank">traumarecoverynetwork.org</a></p>
+                    <p>Peer support programs</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resilience Building Section -->
+        <section class="content-section" id="resilience">
+            <div class="hero-card">
+                <h1>Building Resilience</h1>
+                <p>Strengthening mental and emotional capacity for sustained service</p>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-tile">
+                    <h3>Personal Resilience Plan</h3>
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="res1">
+                            <label for="res1">Daily spiritual practices maintained</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="res2">
+                            <label for="res2">Regular exercise routine</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="res3">
+                            <label for="res3">Adequate sleep (7-8 hours)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="res4">
+                            <label for="res4">Healthy diet maintained</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="res5">
+                            <label for="res5">Regular contact with support network</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="res6">
+                            <label for="res6">Hobbies and recreation time</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Team Resilience Strategies</h3>
+                    <ul style="color: #ccc;">
+                        <li>Weekly team debriefings</li>
+                        <li>Buddy system for support</li>
+                        <li>Celebrate small victories</li>
+                        <li>Shared meals and community time</li>
+                        <li>Rotation of high-stress duties</li>
+                        <li>Regular R&R scheduling</li>
+                        <li>Team building activities</li>
+                    </ul>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Resilience Training</h3>
+                    <p><strong>Resilience First Aid</strong></p>
+                    <p>Online training for humanitarian workers</p>
+                    <p><a href="https://www.conservation.org/rfa" target="_blank">conservation.org/rfa</a></p>
+                    <br>
+                    <p><strong>Disaster Distress Helpline</strong></p>
+                    <p>Call: 1-800-985-5990</p>
+                    <p>Text: TalkWithUs to 66746</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spiritual Support Section -->
+        <section class="content-section" id="spiritual">
+            <div class="hero-card">
+                <h1>Spiritual Care in Crisis</h1>
+                <p>Faith-based support for workers in conflict zones</p>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-tile">
+                    <h3>Scripture for Crisis</h3>
+                    <p><strong>Protection:</strong> Psalm 91, Psalm 46</p>
+                    <p><strong>Fear:</strong> Isaiah 41:10, 2 Timothy 1:7</p>
+                    <p><strong>Strength:</strong> Philippians 4:13, Isaiah 40:31</p>
+                    <p><strong>Peace:</strong> John 14:27, Philippians 4:6-7</p>
+                    <p><strong>Presence:</strong> Deuteronomy 31:6, Matthew 28:20</p>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Prayer Resources</h3>
+                    <p><strong>24-7 Prayer International</strong></p>
+                    <p>Global prayer support network</p>
+                    <p><a href="https://www.24-7prayer.com" target="_blank">24-7prayer.com</a></p>
+                    <br>
+                    <p><strong>Prayercast</strong></p>
+                    <p>Prayer guides for nations in conflict</p>
+                    <p><a href="https://www.prayercast.com" target="_blank">prayercast.com</a></p>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Chaplaincy Support</h3>
+                    <p><strong>Barnabas International</strong></p>
+                    <p>Pastoral care for global workers</p>
+                    <p>Website: <a href="https://www.barnabas.org" target="_blank">barnabas.org</a></p>
+                    <p>Crisis counseling available</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Communication Section -->
+        <section class="content-section" id="communication">
+            <div class="hero-card">
+                <h1>Secure Communication</h1>
+                <p>Encrypted channels and communication protocols</p>
+            </div>
+
+            <div class="alert warning">
+                <strong>OPSEC Reminder:</strong> Always assume hostile monitoring. Use encrypted channels for sensitive information. Avoid discussing locations, movements, or personnel details on open channels.
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-tile">
+                    <h3>Encrypted Communication Apps</h3>
+                    <p><strong>Signal:</strong> End-to-end encrypted messaging</p>
+                    <p><a href="https://signal.org" target="_blank">signal.org</a></p>
+                    <br>
+                    <p><strong>ProtonMail:</strong> Encrypted email</p>
+                    <p><a href="https://protonmail.com" target="_blank">protonmail.com</a></p>
+                    <br>
+                    <p><strong>Briar:</strong> Offline mesh networking</p>
+                    <p><a href="https://briarproject.org" target="_blank">briarproject.org</a></p>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Satellite Communication</h3>
+                    <p><strong>Iridium:</strong> Global satellite coverage</p>
+                    <p><a href="https://www.iridium.com" target="_blank">iridium.com</a></p>
+                    <br>
+                    <p><strong>Thuraya:</strong> Middle East/Africa focus</p>
+                    <p><a href="https://www.thuraya.com" target="_blank">thuraya.com</a></p>
+                    <br>
+                    <p><strong>BGAN:</strong> Broadband satellite</p>
+                    <p><a href="https://www.inmarsat.com" target="_blank">inmarsat.com</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security Protocols Section -->
+        <section class="content-section" id="security">
+            <div class="hero-card">
+                <h1>Security Protocols</h1>
+                <p>Comprehensive security guidelines for conflict zones</p>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h3>Personal Security Measures</h3>
+                        <span class="toggle">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul style="color: #ccc;">
+                                <li>Maintain low profile - avoid logos, flags</li>
+                                <li>Vary daily routines and routes</li>
+                                <li>Establish check-in schedules</li>
+                                <li>Know local emergency numbers</li>
+                                <li>Identify safe havens and hospitals</li>
+                                <li>Keep vehicle fueled above 50%</li>
+                                <li>Maintain 2-week supply of essentials</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h3>Residential Security</h3>
+                        <span class="toggle">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul style="color: #ccc;">
+                                <li>Install security film on windows</li>
+                                <li>Reinforce doors with deadbolts</li>
+                                <li>Create safe room with supplies</li>
+                                <li>Install motion sensor lights</li>
+                                <li>Keep curtains drawn at night</li>
+                                <li>Establish neighborhood watch</li>
+                                <li>Test alarm systems regularly</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <h3>Digital Security</h3>
+                        <span class="toggle">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul style="color: #ccc;">
+                                <li>Use VPN for all internet access</li>
+                                <li>Enable 2-factor authentication</li>
+                                <li>Regular encrypted backups</li>
+                                <li>Secure deletion of sensitive data</li>
+                                <li>Avoid public WiFi networks</li>
+                                <li>Use encrypted storage devices</li>
+                                <li>Regular security audits</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Organizations Section -->
+        <section class="content-section" id="organizations">
+            <div class="hero-card">
+                <h1>Support Organizations</h1>
+                <p>Specialized agencies for war zone worker care</p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h4>Crisis Consulting International</h4>
+                    <span class="badge">Security</span>
+                    <span class="badge">Training</span>
+                    <p>Contingency planning for Christian workers</p>
+                    <p>Email: info@cricon.org</p>
+                </div>
+
+                <div class="contact-card">
+                    <h4>Serving in Mission (SIM)</h4>
+                    <span class="badge">Global</span>
+                    <p>Crisis management team</p>
+                    <p>Website: <a href="https://www.sim.org" target="_blank">sim.org</a></p>
+                </div>
+
+                <div class="contact-card">
+                    <h4>Wycliffe Global Alliance</h4>
+                    <span class="badge">Language Workers</span>
+                    <p>Crisis response unit</p>
+                    <p>Website: <a href="https://www.wycliffe.net" target="_blank">wycliffe.net</a></p>
+                </div>
+
+                <div class="contact-card">
+                    <h4>Pioneers International</h4>
+                    <span class="badge">Church Planting</span>
+                    <p>Security and crisis team</p>
+                    <p>Website: <a href="https://www.pioneers.org" target="_blank">pioneers.org</a></p>
+                </div>
+
+                <div class="contact-card">
+                    <h4>Samaritan's Purse</h4>
+                    <span class="badge">Disaster Response</span>
+                    <p>Emergency field hospitals</p>
+                    <p>Website: <a href="https://www.samaritanspurse.org" target="_blank">samaritanspurse.org</a></p>
+                </div>
+
+                <div class="contact-card">
+                    <h4>SEND International</h4>
+                    <span class="badge">Crisis Care</span>
+                    <p>Member care in difficult places</p>
+                    <p>Website: <a href="https://www.send.org" target="_blank">send.org</a></p>
+                </div>
+            </div>
+
+            <div class="resource-tile">
+                <h3>Specialized War Zone Support</h3>
+                
+                <p><strong>Centre for Safety and Development</strong></p>
+                <p>Security training for humanitarian workers</p>
+                <p>Website: <a href="https://www.centreforsafety.org" target="_blank">centreforsafety.org</a></p>
+                <br>
+                
+                <p><strong>DisasterReady</strong></p>
+                <p>Free online training for humanitarian workers</p>
+                <p>Website: <a href="https://www.disasterready.org" target="_blank">disasterready.org</a></p>
+                <br>
+                
+                <p><strong>RedR International</strong></p>
+                <p>Training for emergency response</p>
+                <p>Website: <a href="https://www.redr.org.uk" target="_blank">redr.org.uk</a></p>
+            </div>
+        </section>
+
+        <!-- Risk Assessment Section -->
+        <section class="content-section" id="assessment">
+            <div class="hero-card">
+                <h1>Risk Assessment Tools</h1>
+                <p>Evaluate and monitor security risks</p>
+            </div>
+
+            <div class="resource-tile">
+                <h3>Security Risk Assessment</h3>
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h4 style="color: #4fbdba;">Location Risk Factors</h4>
+                    <select style="width: 100%; padding: 10px; margin: 10px 0; background: #0f3460; color: #eee; border: 1px solid #4fbdba; border-radius: 5px;">
+                        <option>Active combat zone</option>
+                        <option>Periodic violence</option>
+                        <option>Political instability</option>
+                        <option>Crime concerns</option>
+                        <option>Relatively stable</option>
+                    </select>
+                    
+                    <h4 style="color: #4fbdba;">Team Vulnerability</h4>
+                    <select style="width: 100%; padding: 10px; margin: 10px 0; background: #0f3460; color: #eee; border: 1px solid #4fbdba; border-radius: 5px;">
+                        <option>High - Foreign nationals, visible</option>
+                        <option>Medium - Some local integration</option>
+                        <option>Low - Well integrated locally</option>
+                    </select>
+                    
+                    <h4 style="color: #4fbdba;">Support Infrastructure</h4>
+                    <select style="width: 100%; padding: 10px; margin: 10px 0; background: #0f3460; color: #eee; border: 1px solid #4fbdba; border-radius: 5px;">
+                        <option>Minimal - Remote location</option>
+                        <option>Basic - Some local support</option>
+                        <option>Good - Embassy, NGO presence</option>
+                    </select>
+                    
+                    <button class="btn btn-primary" style="width: 100%;" onclick="calculateRisk()">Calculate Risk Level</button>
+                </div>
+            </div>
+
+            <div class="resource-tile">
+                <h3>Incident Reporting</h3>
+                <p>Document security incidents for organizational learning</p>
+                <textarea style="width: 100%; height: 150px; padding: 10px; background: rgba(255,255,255,0.05); color: #eee; border: 1px solid #4fbdba; border-radius: 5px;" placeholder="Describe incident, date, location, response..."></textarea>
+                <button class="btn btn-secondary" style="width: 100%;">Save Report</button>
+            </div>
+        </section>
+
+        <!-- Training Section -->
+        <section class="content-section" id="training">
+            <div class="hero-card">
+                <h1>Training Resources</h1>
+                <p>Essential training for conflict zone workers</p>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-tile">
+                    <h3>HEAT Training</h3>
+                    <p>Hostile Environment Awareness Training</p>
+                    <p><strong>Pilgrims Group</strong></p>
+                    <p>Website: <a href="https://www.pilgrimsgroup.com" target="_blank">pilgrimsgroup.com</a></p>
+                    <br>
+                    <p><strong>Dynamis</strong></p>
+                    <p>Website: <a href="https://www.dyns.net" target="_blank">dyns.net</a></p>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Online Security Courses</h3>
+                    <p><strong>UN Safe and Secure</strong></p>
+                    <p>Free online security training</p>
+                    <p><a href="https://training.dss.un.org" target="_blank">training.dss.un.org</a></p>
+                    <br>
+                    <p><strong>IFRC Stay Safe</strong></p>
+                    <p>Personal security e-learning</p>
+                    <p><a href="https://www.ifrc.org" target="_blank">ifrc.org</a></p>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>First Aid Training</h3>
+                    <p><strong>Remote Medical International</strong></p>
+                    <p>Wilderness and remote medicine</p>
+                    <p><a href="https://www.remotemedical.com" target="_blank">remotemedical.com</a></p>
+                    <br>
+                    <p><strong>SOLO Wilderness Medicine</strong></p>
+                    <p><a href="https://www.soloschools.com" target="_blank">soloschools.com</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documents Section -->
+        <section class="content-section" id="documents">
+            <div class="hero-card">
+                <h1>Essential Documents</h1>
+                <p>Templates and guides for crisis management</p>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-tile">
+                    <h3>Security Plan Template</h3>
+                    <ul style="color: #ccc;">
+                        <li>Threat assessment</li>
+                        <li>Security protocols</li>
+                        <li>Communication procedures</li>
+                        <li>Evacuation routes</li>
+                        <li>Emergency contacts</li>
+                        <li>Medical information</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="downloadSecurityPlan()">Download Template</button>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Crisis Management Checklist</h3>
+                    <ul style="color: #ccc;">
+                        <li>Initial response actions</li>
+                        <li>Communication tree</li>
+                        <li>Media management</li>
+                        <li>Family notification</li>
+                        <li>Legal considerations</li>
+                        <li>Recovery planning</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="downloadCrisisChecklist()">Download Checklist</button>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Contingency Planning Guide</h3>
+                    <p>Comprehensive guide for developing contingency plans</p>
+                    <p>Includes scenarios for:</p>
+                    <ul style="color: #ccc;">
+                        <li>Natural disasters</li>
+                        <li>Political upheaval</li>
+                        <li>Medical emergencies</li>
+                        <li>Security incidents</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="downloadContingencyGuide()">Access Guide</button>
+                </div>
+            </div>
+
+            <div class="resource-grid" style="margin-top: 30px;">
+                <div class="resource-tile">
+                    <h3>Emergency Contact Card</h3>
+                    <p>Printable wallet card with critical numbers</p>
+                    <ul style="color: #ccc;">
+                        <li>Global emergency services</li>
+                        <li>Evacuation coordinators</li>
+                        <li>Medical evacuation</li>
+                        <li>Embassy contacts</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="downloadContactCard()">Generate Card</button>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Medical Information Form</h3>
+                    <p>Essential medical details for emergencies</p>
+                    <ul style="color: #ccc;">
+                        <li>Blood type and allergies</li>
+                        <li>Current medications</li>
+                        <li>Medical conditions</li>
+                        <li>Emergency contacts</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="downloadMedicalForm()">Download Form</button>
+                </div>
+
+                <div class="resource-tile">
+                    <h3>Incident Report Template</h3>
+                    <p>Standardized reporting for security incidents</p>
+                    <ul style="color: #ccc;">
+                        <li>Incident details</li>
+                        <li>Timeline of events</li>
+                        <li>Response actions</li>
+                        <li>Lessons learned</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="downloadIncidentReport()">Download Template</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Audio Toggle Button -->
+    <div class="audio-toggle" id="audioToggle" onclick="toggleAudio()">
+        <span style="font-size: 24px;">🎵</span>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('info')">×</span>
+            <h2>How to Use This App</h2>
+            
+            <h3>Purpose</h3>
+            <p>This application provides comprehensive support resources for global workers serving in war zones and conflict areas. It consolidates security protocols, trauma care, evacuation procedures, and member care resources.</p>
+            
+            <h3>Navigation</h3>
+            <ul style="color: #ccc;">
+                <li>Use the side menu to access different sections</li>
+                <li>On mobile, tap the menu button to show/hide navigation</li>
+                <li>Each section contains specific resources and tools</li>
+            </ul>
+            
+            <h3>Key Features</h3>
+            <ul style="color: #ccc;">
+                <li><strong>Immediate Safety:</strong> Crisis response protocols</li>
+                <li><strong>Evacuation Plans:</strong> Step-by-step procedures</li>
+                <li><strong>Trauma Care:</strong> Mental health support</li>
+                <li><strong>Secure Communication:</strong> Encrypted channels</li>
+                <li><strong>Risk Assessment:</strong> Evaluation tools</li>
+            </ul>
+            
+            <h3>Emergency Use</h3>
+            <p>In crisis situations, go directly to "Immediate Safety" or "Evacuation Plans" sections for critical protocols.</p>
+            
+            <h3>Offline Access</h3>
+            <p>Save this app to your device for offline access:</p>
+            <p><strong>iPhone:</strong> Share → Add to Home Screen</p>
+            <p><strong>Android:</strong> Menu → Add to Home Screen</p>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('about')">×</span>
+            <h2>About War Zone Member Care</h2>
+            
+            <h3>Created by Justin</h3>
+            <p>Depths to Heights Ministry</p>
+            
+            <h3>Our Mission</h3>
+            <p>Depths to Heights provides critical support resources for global workers serving in the world's most dangerous places. This application was developed in consultation with security experts, trauma specialists, and experienced field workers.</p>
+            
+            <h3>Resource Partners</h3>
+            <ul style="color: #ccc;">
+                <li>Crisis Consulting International</li>
+                <li>Headington Institute</li>
+                <li>KonTerra Group</li>
+                <li>International SOS</li>
+                <li>Antares Foundation</li>
+            </ul>
+            
+            <h3>Contact Information</h3>
+            <p><strong>Website:</strong> <a href="https://depthstoheights.org" target="_blank" style="color: #7ec8e3;">depthstoheights.org</a></p>
+            <p><strong>Email:</strong> <a href="mailto:depthstoheights@gmail.com" style="color: #7ec8e3;">depthstoheights@gmail.com</a></p>
+            
+            <h3>Support Our Work</h3>
+            <p>Your donation helps us provide critical resources for workers in crisis zones.</p>
+            <button class="donate-btn" onclick="window.open('https://www.paypal.com/donate/?hosted_button_id=8GRE7B8C3TP2U', '_blank')">Donate via PayPal</button>
+            
+            <h3>Disclaimer</h3>
+            <p>This app provides general guidance only. Always defer to your organization's security protocols and professional security advisors.</p>
+            
+            <h3>Version</h3>
+            <p>War Zone Member Care v1.0</p>
+            <p>© 2025 Depths to Heights. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentSection = 'dashboard';
+        let audioPlaying = false;
+
+        // Initialize
+        function init() {
+            loadSavedData();
+            updateDateTime();
+            setInterval(updateDateTime, 60000);
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            currentSection = sectionId;
+            
+            // Close mobile menu
+            if (window.innerWidth <= 768) {
+                document.getElementById('sideNav').classList.remove('mobile-visible');
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            const nav = document.getElementById('sideNav');
+            nav.classList.toggle('mobile-visible');
+        }
+
+        // Toggle accordion
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            item.classList.toggle('active');
+        }
+
+        // Show modal
+        function showModal(modalId) {
+            document.getElementById(modalId + 'Modal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId + 'Modal').classList.remove('active');
+        }
+
+        // Toggle audio
+        function toggleAudio() {
+            const toggle = document.getElementById('audioToggle');
+            audioPlaying = !audioPlaying;
+            toggle.classList.toggle('playing');
+        }
+
+        // Risk assessment
+        function assessThreat() {
+            alert('Threat assessment updated. Review security protocols for current threat level.');
+        }
+
+        function calculateRisk() {
+            alert('Risk calculation complete. Adjust security measures accordingly.');
+        }
+
+        // Document Downloads
+        function downloadSecurityPlan() {
+            const content = `SECURITY PLAN TEMPLATE
+Organization: _____________________
+Location: _____________________
+Date: _____________________
+
+1. THREAT ASSESSMENT
+□ Political instability level: High / Medium / Low
+□ Crime rate: High / Medium / Low
+□ Terrorism threat: High / Medium / Low
+□ Natural disaster risk: High / Medium / Low
+□ Health/medical risks: High / Medium / Low
+
+2. SECURITY PROTOCOLS
+Personal Security:
+□ Vary daily routes and schedules
+□ Maintain low profile (no logos/flags)
+□ Establish check-in schedule: Every ___ hours
+□ Buddy system implemented
+□ Local dress code followed
+
+Residential Security:
+□ Security film on windows
+□ Reinforced doors with deadbolts
+□ Safe room established with supplies
+□ Emergency lighting installed
+□ Alarm system tested weekly
+□ Guards posted (if applicable)
+
+Vehicle Security:
+□ Keep fuel above 50% always
+□ Vary parking locations
+□ Check for surveillance
+□ Emergency kit in vehicle
+□ Spare phone in vehicle
+
+3. COMMUNICATION PROCEDURES
+Primary Communication:
+□ Method: _____________________
+□ Frequency: _____________________
+□ Backup method: _____________________
+
+Emergency Communication:
+□ Duress word established: _____________________
+□ All-clear signal: _____________________
+□ Silent alarm code: _____________________
+
+4. EVACUATION ROUTES
+Primary Route: _____________________
+Secondary Route: _____________________
+Rally Point 1: _____________________
+Rally Point 2: _____________________
+Safe Haven Location: _____________________
+
+5. EMERGENCY CONTACTS
+Security Officer: _____________________
+Medical Emergency: _____________________
+Embassy/Consulate: _____________________
+Local Police: _____________________
+Evacuation Coordinator: _____________________
+International SOS: +44 20 8762 8008
+
+6. MEDICAL INFORMATION
+Nearest Hospital: _____________________
+Blood Bank: _____________________
+Pharmacy 24hr: _____________________
+Medical Evacuation: _____________________
+
+7. REVIEW SCHEDULE
+□ Weekly team security briefing
+□ Monthly plan review
+□ Quarterly evacuation drill
+□ Annual security audit
+
+Prepared by: _____________________
+Approved by: _____________________
+Last Updated: _____________________`;
+
+            downloadFile(content, 'Security_Plan_Template.txt');
+        }
+
+        function downloadCrisisChecklist() {
+            const content = `CRISIS MANAGEMENT CHECKLIST
+
+IMMEDIATE RESPONSE (0-2 HOURS)
+□ Ensure safety of all personnel
+□ Account for all team members
+□ Activate crisis management team
+□ Secure the scene/location
+□ Contact emergency services if needed
+□ Document initial facts
+□ Activate communication tree
+□ Notify security officer
+□ Brief senior leadership
+□ Prepare initial statement
+
+SHORT-TERM RESPONSE (2-24 HOURS)
+□ Establish crisis command center
+□ Conduct detailed assessment
+□ Contact families of affected
+□ Coordinate with authorities
+□ Manage media inquiries
+□ Update staff regularly
+□ Document all decisions
+□ Coordinate medical care
+□ Arrange counseling support
+□ Review security protocols
+
+MEDIUM-TERM RESPONSE (1-7 DAYS)
+□ Continue regular updates
+□ Conduct initial debrief
+□ Support affected individuals
+□ Manage ongoing operations
+□ Coordinate with insurers
+□ Handle legal matters
+□ Plan memorial/recognition
+□ Address team morale
+□ Review and adjust response
+□ Prepare detailed reports
+
+LONG-TERM RESPONSE (1 WEEK+)
+□ Conduct full debrief
+□ Document lessons learned
+□ Update crisis plans
+□ Provide ongoing support
+□ Handle compensation/benefits
+□ Manage reputation recovery
+□ Implement improvements
+□ Schedule follow-up care
+□ Close out crisis operations
+□ Archive documentation
+
+COMMUNICATION TREE
+Level 1: _____________________
+Level 2: _____________________
+Level 3: _____________________
+Level 4: _____________________
+
+MEDIA MANAGEMENT
+Spokesperson: _____________________
+Backup: _____________________
+Key Messages:
+1. _____________________
+2. _____________________
+3. _____________________
+
+FAMILY NOTIFICATION
+Lead: _____________________
+Support: _____________________
+Chaplain/Counselor: _____________________
+
+LEGAL CONSIDERATIONS
+Legal Counsel: _____________________
+Insurance: _____________________
+Government Liaison: _____________________
+
+RECOVERY PLANNING
+Operations Lead: _____________________
+Support Services: _____________________
+Timeline: _____________________
+
+Prepared by: _____________________
+Date: _____________________`;
+
+            downloadFile(content, 'Crisis_Management_Checklist.txt');
+        }
+
+        function downloadContingencyGuide() {
+            const content = `CONTINGENCY PLANNING GUIDE
+
+INTRODUCTION
+This guide helps organizations develop comprehensive contingency plans for operations in conflict zones and high-risk areas.
+
+PLANNING PRINCIPLES
+1. Assume worst-case scenarios
+2. Plan for multiple contingencies
+3. Maintain flexibility
+4. Regular review and updates
+5. Clear decision authorities
+6. Tested communication systems
+7. Pre-positioned resources
+
+SCENARIO 1: NATURAL DISASTERS
+Triggers:
+- Earthquake magnitude 6.0+
+- Flooding affecting operations
+- Severe weather warnings
+
+Response Actions:
+□ Activate emergency response team
+□ Move to safe locations
+□ Account for all personnel
+□ Assess damage and injuries
+□ Contact emergency services
+□ Implement business continuity plan
+□ Coordinate relief efforts
+
+Resources Needed:
+- Emergency supplies (72-hour minimum)
+- Medical kits
+- Communication equipment
+- Transportation
+- Temporary shelter
+
+SCENARIO 2: POLITICAL UPHEAVAL
+Triggers:
+- Government overthrow
+- Military coup
+- Civil unrest
+- Election violence
+
+Response Actions:
+□ Increase security posture
+□ Restrict movement
+□ Monitor local media
+□ Contact embassy
+□ Prepare for evacuation
+□ Secure sensitive materials
+□ Update threat assessment
+
+Resources Needed:
+- Intelligence sources
+- Security personnel
+- Evacuation plans
+- Emergency funds
+- Document destruction capability
+
+SCENARIO 3: MEDICAL EMERGENCY
+Triggers:
+- Serious injury/illness
+- Disease outbreak
+- Medical evacuation needed
+- Hospital overwhelmed
+
+Response Actions:
+□ Provide immediate first aid
+□ Contact medical professionals
+□ Arrange medical evacuation
+□ Notify insurance provider
+□ Support family members
+□ Manage ongoing care
+□ Handle work responsibilities
+
+Resources Needed:
+- First aid trained staff
+- Medical supplies
+- Evacuation insurance
+- Medical contacts
+- Communication systems
+
+SCENARIO 4: SECURITY INCIDENT
+Triggers:
+- Direct threat received
+- Kidnapping/abduction
+- Armed attack
+- Bombing/explosion
+- Criminal activity
+
+Response Actions:
+□ Implement lockdown procedures
+□ Contact security forces
+□ Evacuate if necessary
+□ Account for personnel
+□ Preserve evidence
+□ Manage communications
+□ Provide support services
+
+Resources Needed:
+- Security protocols
+- Safe rooms/havens
+- Communication equipment
+- Evacuation routes
+- Crisis response team
+
+PLANNING TEMPLATE
+
+Scenario: _____________________
+
+Triggers (What activates this plan?):
+1. _____________________
+2. _____________________
+3. _____________________
+
+Decision Authority:
+Primary: _____________________
+Backup: _____________________
+
+Immediate Actions (0-2 hours):
+1. _____________________
+2. _____________________
+3. _____________________
+
+Short-term Actions (2-24 hours):
+1. _____________________
+2. _____________________
+3. _____________________
+
+Resources Required:
+- _____________________
+- _____________________
+- _____________________
+
+Communication Plan:
+Internal: _____________________
+External: _____________________
+Media: _____________________
+
+Stand-down Criteria:
+_____________________
+
+TESTING SCHEDULE
+□ Tabletop exercise: Quarterly
+□ Communication test: Monthly
+□ Evacuation drill: Bi-annually
+□ Full simulation: Annually
+
+MAINTENANCE
+Review Cycle: Every 3 months
+Update Triggers:
+- Personnel changes
+- Threat changes
+- Lessons learned
+- Regulatory changes
+
+Last Updated: _____________________
+Next Review: _____________________
+Responsible: _____________________`;
+
+            downloadFile(content, 'Contingency_Planning_Guide.txt');
+        }
+
+        function downloadContactCard() {
+            const content = `EMERGENCY CONTACT CARD
+Print, cut, and laminate for wallet
+
+------------------------------------
+FRONT:
+EMERGENCY CONTACTS - GLOBAL WORKER
+
+International SOS: +44 20 8762 8008
+Global Rescue: +1 617-932-6001
+Crisis24: +1 312-470-3115
+
+Organization Security: ______________
+Team Leader: ______________
+------------------------------------
+BACK:
+Medical Emergency: ______________
+Embassy/Consulate: ______________
+Insurance: ______________
+
+Blood Type: ____ Allergies: ________
+Medications: _____________________
+------------------------------------
+
+SECONDARY CARD:
+------------------------------------
+FRONT:
+EVACUATION CONTACTS
+
+Primary Coordinator: ______________
+Backup Coordinator: ______________
+Assembly Point: ______________
+Safe Haven: ______________
+------------------------------------
+BACK:
+MedjetAssist: +1 205-595-6626
+CISI Insurance: +1 203-399-5130
+Home Office: ______________
+
+Duress Word: ______________
+All Clear: ______________
+------------------------------------`;
+
+            downloadFile(content, 'Emergency_Contact_Card.txt');
+        }
+
+        function downloadMedicalForm() {
+            const content = `MEDICAL INFORMATION FORM
+
+PERSONAL INFORMATION
+Name: _____________________
+Date of Birth: _____________________
+Passport #: _____________________
+Blood Type: _____________________
+Height: _____ Weight: _____
+
+EMERGENCY CONTACTS
+Primary Contact:
+Name: _____________________
+Relationship: _____________________
+Phone: _____________________
+Email: _____________________
+
+Secondary Contact:
+Name: _____________________
+Relationship: _____________________
+Phone: _____________________
+Email: _____________________
+
+MEDICAL HISTORY
+Chronic Conditions:
+□ Diabetes Type: _____
+□ Hypertension
+□ Heart Disease
+□ Asthma
+□ Epilepsy
+□ Mental Health: _____________________
+□ Other: _____________________
+
+Previous Surgeries:
+_____________________
+_____________________
+
+ALLERGIES
+Medications:
+□ Penicillin
+□ Sulfa drugs
+□ Aspirin
+□ Other: _____________________
+
+Food:
+□ Nuts: _____________________
+□ Shellfish
+□ Eggs
+□ Dairy
+□ Other: _____________________
+
+Environmental:
+□ Bee stings
+□ Latex
+□ Other: _____________________
+
+CURRENT MEDICATIONS
+Medication: _____________________ Dose: _____ Frequency: _____
+Medication: _____________________ Dose: _____ Frequency: _____
+Medication: _____________________ Dose: _____ Frequency: _____
+Medication: _____________________ Dose: _____ Frequency: _____
+
+IMMUNIZATIONS
+□ Tetanus (Date: _____)
+□ Hepatitis A (Date: _____)
+□ Hepatitis B (Date: _____)
+□ Typhoid (Date: _____)
+□ Yellow Fever (Date: _____)
+□ Meningitis (Date: _____)
+□ COVID-19 (Date: _____)
+□ Other: _____________________
+
+INSURANCE INFORMATION
+Provider: _____________________
+Policy #: _____________________
+Group #: _____________________
+Phone: _____________________
+
+Medical Evacuation Insurance:
+Provider: _____________________
+Policy #: _____________________
+24hr Phone: _____________________
+
+LOCAL MEDICAL FACILITIES
+Preferred Hospital: _____________________
+Address: _____________________
+Phone: _____________________
+
+Preferred Doctor: _____________________
+Phone: _____________________
+
+Pharmacy: _____________________
+Phone: _____________________
+
+SPECIAL INSTRUCTIONS
+_____________________
+_____________________
+_____________________
+
+Last Updated: _____________________
+Signature: _____________________`;
+
+            downloadFile(content, 'Medical_Information_Form.txt');
+        }
+
+        function downloadIncidentReport() {
+            const content = `INCIDENT REPORT TEMPLATE
+
+INCIDENT INFORMATION
+Report Date: _____________________
+Incident Date: _____________________
+Incident Time: _____________________
+Location: _____________________
+GPS Coordinates: _____________________
+
+INCIDENT TYPE
+□ Security threat
+□ Medical emergency
+□ Accident/Injury
+□ Property damage
+□ Theft/Crime
+□ Natural disaster
+□ Political unrest
+□ Other: _____________________
+
+SEVERITY LEVEL
+□ Critical (Life threatening)
+□ High (Significant impact)
+□ Medium (Moderate impact)
+□ Low (Minor impact)
+
+PERSONS INVOLVED
+Name: _____________________ Status: _____________________
+Name: _____________________ Status: _____________________
+Name: _____________________ Status: _____________________
+
+INCIDENT DESCRIPTION
+What happened (facts only):
+_____________________
+_____________________
+_____________________
+_____________________
+
+Timeline of Events:
+Time: _____ Event: _____________________
+Time: _____ Event: _____________________
+Time: _____ Event: _____________________
+Time: _____ Event: _____________________
+
+IMMEDIATE RESPONSE ACTIONS
+□ First aid provided
+□ Emergency services contacted
+□ Area secured
+□ Personnel evacuated
+□ Authorities notified
+□ Senior leadership briefed
+□ Other: _____________________
+
+INJURIES/DAMAGES
+Injuries:
+_____________________
+_____________________
+
+Property Damage:
+_____________________
+_____________________
+
+Estimated Cost: _____________________
+
+WITNESSES
+Name: _____________________ Contact: _____________________
+Name: _____________________ Contact: _____________________
+
+AUTHORITIES INVOLVED
+□ Local Police (Badge #: _____)
+□ Military (Unit: _____)
+□ Embassy (Contact: _____)
+□ Other: _____________________
+
+Report/Case #: _____________________
+
+FOLLOW-UP ACTIONS REQUIRED
+□ Medical follow-up
+□ Counseling services
+□ Insurance claim
+□ Legal action
+□ Security review
+□ Policy update
+□ Staff briefing
+□ Other: _____________________
+
+ROOT CAUSE ANALYSIS
+Contributing Factors:
+1. _____________________
+2. _____________________
+3. _____________________
+
+Could this have been prevented? □ Yes □ No
+If yes, how: _____________________
+
+LESSONS LEARNED
+_____________________
+_____________________
+_____________________
+
+RECOMMENDATIONS
+1. _____________________
+2. _____________________
+3. _____________________
+
+REPORT COMPLETED BY
+Name: _____________________
+Position: _____________________
+Signature: _____________________
+Date: _____________________
+
+REVIEWED BY
+Name: _____________________
+Position: _____________________
+Signature: _____________________
+Date: _____________________
+
+ATTACHMENTS
+□ Photos
+□ Medical reports
+□ Police reports
+□ Witness statements
+□ Other: _____________________`;
+
+            downloadFile(content, 'Incident_Report_Template.txt');
+        }
+
+        // Helper function to download files
+        function downloadFile(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            // Show success message
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #4fbdba;
+                color: #0f3460;
+                padding: 20px 40px;
+                border-radius: 10px;
+                font-weight: bold;
+                z-index: 10000;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            `;
+            message.textContent = `${filename} downloaded successfully!`;
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        }
+
+        // Update date/time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                timeZone: 'UTC',
+                hour: '2-digit',
+                minute: '2-digit',
+                day: '2-digit',
+                month: 'short'
+            };
+            // Update any date/time displays
+        }
+
+        // Save data locally
+        function loadSavedData() {
+            // Load checklist states
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                const saved = localStorage.getItem('warzone_' + checkbox.id);
+                if (saved === 'true') {
+                    checkbox.checked = true;
+                }
+                
+                checkbox.addEventListener('change', function() {
+                    localStorage.setItem('warzone_' + this.id, this.checked);
+                });
+            });
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
